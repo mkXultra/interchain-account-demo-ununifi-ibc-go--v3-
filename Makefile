@@ -6,7 +6,15 @@ DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace bu
 ###############################################################################
 ###                           Install                                       ###
 ###############################################################################
-install: go.sum
+submod-update: 
+		@echo "--> update submodule"
+		@git submodule update --init --recursive 
+
+install-chain: submod-update
+		@echo "--> Installing chain"
+		@cd chain&& make install
+
+install: go.sum install-chain
 		@echo "--> Installing icad"
 		@go install ./cmd/icad
 
